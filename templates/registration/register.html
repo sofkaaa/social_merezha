@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h2 class="text-center mb-4">Реєстрація / Registration</h2>
+
+            <form method="post" novalidate>
+                {% csrf_token %}
+
+
+                <div class="mb-3">
+                    <label for="id_username" class="form-label">Ім’я користувача / Username</label>
+                    {{ form.username }}
+                    <div class="form-text">Макс. 150 символів. Літери, цифри та @/./+/-/_ only.</div>
+                </div>
+
+
+                <div class="mb-3">
+                    <label for="id_password1" class="form-label">Пароль / Password</label>
+                    {{ form.password1 }}
+                    <ul class="form-text">
+                        <li>Пароль не повинен бути схожим на особисту інформацію / Your password can’t be too similar to your personal info.</li>
+                        <li>Мінімум 8 символів / Must be at least 8 characters.</li>
+                        <li>Не має бути популярним паролем / Can’t be commonly used password.</li>
+                        <li>Не може складатись тільки з цифр / Can’t be entirely numeric.</li>
+                    </ul>
+                </div>
+
+                <div class="mb-3">
+                    <label for="id_password2" class="form-label">Підтвердження пароля / Password confirmation</label>
+                    {{ form.password2 }}
+                    <div class="form-text">Повторіть пароль / Enter the same password again.</div>
+                </div>
+
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-success">Зареєструватися / Register</button>
+                </div>
+            </form>
+
+            <p class="mt-3 text-center">
+                Вже маєте акаунт? <a href="{% url 'login' %}">Увійти / Login</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

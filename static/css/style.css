@@ -1,0 +1,141 @@
+body {
+    background-color: #f8f9fa; 
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    font-family: sans-serif;
+}
+
+.navbar {
+    padding: 1rem 0;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+    color: white;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover,
+.navbar-dark .navbar-nav .nav-link:focus {
+    color: #adb5bd;
+}
+
+.navbar-dark .navbar-nav .active-link {
+    color: #ced4da; 
+}
+
+.container {
+    padding-top: 20px;
+}
+
+.main-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; 
+    padding: 20px;
+}
+
+.task-block {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 600px; 
+}
+
+.task-item a {
+    text-decoration: none;
+    color: #333;
+    font-size: 18px;
+    font-weight: bold;
+    display: block;
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.task-item a:hover {
+    color: #333;
+    ;
+}
+
+.task-item:last-child a {
+    border-bottom: none;
+}
+
+.create-task-btn {
+    display: inline-block;
+    margin-top: 20px;
+}
+
+.task-desc {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.task-desc h4 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.task-desc p {
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 10px;
+}
+
+.comment-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.comment-list li {
+    background: #f9f9f9;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 10px;
+}
+
+.comment-list li p {
+    margin-bottom: 5px;
+}
+
+.comment-date {
+    font-size: 0.8em;
+    color: #777;
+    text-align: right;
+}
+
+
+.hello-text {
+    color: white;
+    margin-right: 10px;
+}
+
+
+.card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.card-body {
+    padding: 15px;
+}
+
+.card-title {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.card-text {
+    font-size: 1rem;
+    color: #555;
+}
+
+.card-text small {
+    color: #777;
+}
