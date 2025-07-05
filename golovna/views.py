@@ -1,9 +1,9 @@
 from django.shortcuts import redirect, render
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import ListView, CreateView, DetailView
-from .models import Post, UserProfile, Comment, Event, Group
+from django.views.generic import ListView, CreateView, DetailView, DeleteView, UpdateView
+from .models import Post, UserProfile, Comment, Event, Group 
 from django.http import HttpResponseForbidden
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from .forms import CommentForm
 # Create your views here.
 
@@ -46,3 +46,47 @@ class PostDetailView(LoginRequiredMixin, DetailView):
         else:
             return self.get(request, *args, **kwargs)
 
+class ProfileView(LoginRequiredMixin, DetailView):
+    model = UserProfile
+    template_name = 'profile.html'
+    context_object_name = 'profile_user'
+    slug_field = 'username'
+    slug_url_kwarg = 'username'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['profile'] = self.object
+        context['posts'] = Post.objects.filter(us=self.object.us)
+        return context
+    
+class PostDeleteView(LoginRequiredMixin, DeleteView):
+    model = Post
+    template_name = "post_confirm_delete.html"
+    success_url = reverse_lazy("home")
+
+class EventListView(LoginRequiredMixin, ListView):
+    model = Event
+    template_name = 'events.html'
+    context_object_name = 'events'
+    ordering = ['data']
+
+class GroupListView(LoginRequiredMixin, ListView):
+    model = Group
+    template_name = 'groups.html'
+    context_object_name = 'groups'
+
+class ComentEditView(LoginRequiredMixin,  UpdateView):
+    model = Comment
+    form_class = CommentForm
+    template_name = "coment_edit.html"
+
+    def get_success_url(self):
+        return reverse("post-detail", kwargs={"pk": self.get_object().pk})
+
+
+class ComentDeleteView(LoginRequiredMixin,  DeleteView):
+    model = Comment
+    template_name = "coment_delete.html"
+
+    def get_success_url(self):
+        return reverse_lazy("post-detail", kwargs={"pk": self.get_object().pk})
