@@ -1,0 +1,54 @@
+
+{% load static %}
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Головна</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+
+    <nav class="top-bar">
+        <div class="nav-item">Головна</div>
+        <div class="nav-item"><a href="{% url 'event-list' %}">Події</a></div>
+        <div class="nav-item"><a href="{% url 'group-list' %}">Групи</a></div>
+        <div class="nav-item"><a href="{% url 'post-create' %}">Новий пост</a></div>
+        <div class="nav-item"><a href="{% url 'profile' username=user.username %}">Профіль</a></div>
+    </nav>
+
+
+    <div class="main-container">
+        <div class="left-content">
+            {% for post in posts %}
+                <div class="post-card">
+                    <p>{{ post.content }}</p>
+                </div>
+            {% empty %}
+                <p>Поки що немає постів.</p>
+            {% endfor %}
+        </div>
+
+        <div class="right-sidebar">
+            <div class="sticky">
+                <div class="block">
+                    <h3>Останні події</h3>
+                    <ul>
+                        {% for event in events %}
+                            <li>{{ event.name }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="block">
+                    <h3>Останні групи</h3>
+                    <ul>
+                        {% for group in groups %}
+                            <li>{{ group.name }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

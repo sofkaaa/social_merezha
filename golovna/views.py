@@ -15,6 +15,7 @@ class HomeView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['events'] = Event.objects.all().order_by('data')[:5]
+        context['groups'] = Group.objects.all().order_by('time')[:5]
         return context
 
 class PostCreateView(LoginRequiredMixin, CreateView):

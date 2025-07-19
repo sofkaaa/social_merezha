@@ -18,7 +18,7 @@ class UserRegisterView(View):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('task-list')
+            return redirect('home')
         return render(request, 'registration/register.html', {'form': form})
 
 class UserLoginView(View):
@@ -31,7 +31,7 @@ class UserLoginView(View):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            return redirect('task-list')
+            return redirect('home')
         return render(request, 'login.html', {'form': form})
 
 @login_required
