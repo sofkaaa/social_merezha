@@ -16,7 +16,7 @@ body {
 
 .nav-item a, .nav-item {
     text-decoration: none;
-    color: black;
+    color: rgb(255, 255, 255);
     font-weight: bold;
 }
 
@@ -58,4 +58,132 @@ body {
     padding: 15px;
     margin-bottom: 15px;
     border-radius: 8px;
+}
+
+
+.profile-wrapper {
+  max-width: 800px;
+  margin: 30px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.1);
+}
+
+.profile-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.profile-header h2 {
+  font-size: 2.2rem;
+  margin-bottom: 5px;
+  color: #222;
+}
+
+.profile-header p {
+  font-size: 1rem;
+  color: #555;
+  margin: 5px 0;
+}
+
+.profile-photo {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-top: 15px;
+  border: 3px solid #555;
+}
+
+form button {
+  margin-top: 20px;
+  padding: 10px 25px;
+  background-color: #555;
+  color: #fff;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+form button:hover {
+  background-color: #555;
+}
+
+.profile-posts h3 {
+  font-size: 1.5rem;
+  border-bottom: 2px solid #555;
+  padding-bottom: 8px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.post-item {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 15px;
+  background-color: #fafafa;
+}
+
+.post-item p {
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.post-item img {
+  max-width: 100%;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.post-item video {
+  max-width: 100%;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.post-item a {
+  color: #555;
+  text-decoration: none;
+  word-break: break-word;
+}
+
+.post-item a:hover {
+  text-decoration: underline;
+}
+
+
+.user-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.user-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    width: 200px;
+    text-align: center;
+}
+
+.user-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.avatar-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ccc;
+  margin-right: 10px;
+  vertical-align: middle;
 }

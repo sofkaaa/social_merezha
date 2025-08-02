@@ -1,0 +1,12 @@
+{% extends 'base.html'%}
+
+{% block content %}
+
+<h2>Редагувати коментар</h2>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Зберегти</button>
+</form>
+<a href="{% url 'post_detail' pk=comment.post.pk %}">Скасувати</a>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="profile-wrapper">
+  <div class="profile-header">
+    <h2>{{ profile_user.us.get_full_name }}</h2>
+    <p>@{{ profile_user.us.username }}</p>
+    {% if profile_user.bio %}
+      <p>{{ profile_user.bio }}</p>
+    {% endif %}
+    {% if profile_user.ava %}
+        <img src="{{ profile_user.ava.url }}" alt="Profile photo" class="profile-photo" />
+    {% endif %}
+
+    {% if request.user.id != profile_user.us.id %}
+        <form method="post" action="{% url 'friend' profile_user.pk %}">
+        {% csrf_token %}
+        <button type="submit">Додати в друзі</button>
+    </form>
+    {% endif %}
+
+  </div>
+
+  <div class="profile-posts">
+    <h3>Пости користувача</h3>
+    {% for post in posts %}
+      <a href="{% url 'post_detail' post.id %}">
+        <div class="post-item">
+        <p>{{ post.content }}</p>
+        {% if post.image %}
+          <img src="{{ post.image.url }}" alt="Post image" />
+        {% endif %}
+        {% if post.video %}
+          <video controls><source src="{{ post.video.url }}" type="video/mp4"></video>
+        {% endif %}
+        {% if post.link %}
+          <a href="{{ post.link }}" target="_blank">{{ post.link }}</a>
+        {% endif %}
+      </div> 
+    </a>
+    {% empty %}
+      <p>Пости відсутні.</p>
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock %}

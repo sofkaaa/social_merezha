@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="post-detail">
+  <h2>Деталі поста</h2>
+
+
+  <div class="post-content">
+    <p>{{ post.content }}</p>
+
+    {% if post.image %}
+      <img src="{{ post.image.url }}" alt="Зображення поста" style="max-width: 100%; margin-top: 10px;">
+    {% endif %}
+
+    {% if post.video %}
+      <video controls style="max-width: 100%; margin-top: 10px;">
+        <source src="{{ post.video.url }}" type="video/mp4">
+        Ваш браузер не підтримує відео.
+      </video>
+    {% endif %}
+
+    {% if post.link %}
+      <p><a href="{{ post.link }}" target="_blank">{{ post.link }}</a></p>
+    {% endif %}
+  </div>
+
+  <hr>
+
+  <div class="comment-section">
+    <h3>Коментарі</h3>
+
+    {% for comment in post.comment_set.all %}
+      <div class="comment" style="margin-bottom: 15px; padding: 10px; background-color: #f3f3f3; border-radius: 8px;">
+        <strong>{{ comment.us.username }}</strong><br>
+        <small>{{ comment.time }}</small>
+        <p>{{ comment.content }}</p>
+      </div>
+    {% empty %}
+      <p>Коментарів поки немає.</p>
+    {% endfor %}
+
+    <hr>
+    <h4>Написати коментар</h4>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Надіслати</button>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

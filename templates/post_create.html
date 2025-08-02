@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="post-container">
+    <h2>Створити новий пост</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Опублікувати</button>
+    </form>
+    <a href="{% url 'home' %}" class="back-button">← Назад</a>
+</div>
+{% endblock %}

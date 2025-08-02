@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="user-list">
+    {% for user in user_list %}
+        {% if user != request.user.userprofile %}
+        <div class="user-card">
+            
+            <a href="{% url 'profile' username=user.us.username %}">
+                {% if user.ava %}
+                <img src="{{ user.ava.url }}" alt="{{ user.us.username }}" class="user-avatar"/>
+                {% endif %}
+                <h3>{{ user.us.get_full_name|default:user.us.username }}</h3>
+            </a>
+            <p>{{ user.bio|default:"Немає опису" }}</p>
+            <form method="post" action="{% url 'friend' user.pk %}">
+                {% csrf_token %}
+                {% if user in request.user.userprofile.friends.all %}
+                Вже друзі
+                {% else %}
+                <button type="submit">Додати в друзі</button>
+                {% endif %}
+            </form>
+        </div>
+        {% endif %}
+    {% empty %}
+        <p>Користувачі не знайдені.</p>
+    {% endfor %}
+</div>
+
+{% endblock %}

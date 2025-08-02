@@ -1,17 +1,27 @@
 from django.shortcuts import redirect, render
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.views import View
 from django.views.generic import ListView, CreateView, DetailView, DeleteView, UpdateView
 from .models import Post, UserProfile, Comment, Event, Group 
 from django.http import HttpResponseForbidden
 from django.urls import reverse, reverse_lazy
-from .forms import CommentForm
+from .forms import CommentForm, UserProfileForm
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.models import User
 # Create your views here.
 
-class HomeView(LoginRequiredMixin, ListView):
+class HomeView(ListView):
     model = Post
     template_name = 'home.html'
-    context_object_name = "posts"
-    
+    context_object_name = 'posts'
+
+    def get_queryset(self):
+        user = self.request.user
+        user_profile, created = UserProfile.objects.get_or_create(us=user)
+
+        friend_users = user_profile.friends.values_list('us', flat=True)
+        return Post.objects.filter(us__in=friend_users).order_by('-time')
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['events'] = Event.objects.all().order_by('data')[:5]
@@ -33,37 +43,56 @@ class PostDetailView(LoginRequiredMixin, DetailView):
     template_name = "post_detail.html"
     context_object_name = "post"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = CommentForm()
+        context['comments'] = Comment.objects.filter(post=self.object, vid__isnull=True).order_by('-time')
+        return context
+
     def post(self, request, *args, **kwargs):
-        post = self.get_object()
-
+        self.object = self.get_object()
         form = CommentForm(request.POST)
-        if form.is_valid():
-            new_comment = form.save(commit=False)
-            new_comment.post = post
-            new_comment.us = request.user
-            new_comment.save()
 
-            return redirect(request.path_info)
-        else:
-            return self.get(request, *args, **kwargs)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = self.object
+            comment.us = request.user
+            comment.save()
+            return redirect('post_detail', pk=self.object.pk)
+
+        context = self.get_context_data()
+        context['form'] = form
+        return self.render_to_response(context)
 
 class ProfileView(LoginRequiredMixin, DetailView):
     model = UserProfile
     template_name = 'profile.html'
     context_object_name = 'profile_user'
-    slug_field = 'username'
-    slug_url_kwarg = 'username'
 
+    def get_object(self):
+        return get_object_or_404(UserProfile, us__username=self.kwargs['username'])
+
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['profile'] = self.object
         context['posts'] = Post.objects.filter(us=self.object.us)
         return context
-    
+        
 class PostDeleteView(LoginRequiredMixin, DeleteView):
     model = Post
     template_name = "post_confirm_delete.html"
     success_url = reverse_lazy("home")
+
+class PostEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Post
+    fields = ['content', 'image', 'video', 'link']
+    template_name = "post_edit.html"
+    success_url = reverse_lazy("home")
+
+    def test_func(self):
+        post = self.get_object()
+        return self.request.user == post.author      
 
 class EventListView(LoginRequiredMixin, ListView):
     model = Event
@@ -91,3 +120,16 @@ class ComentDeleteView(LoginRequiredMixin,  DeleteView):
 
     def get_success_url(self):
         return reverse_lazy("post-detail", kwargs={"pk": self.get_object().pk})
+    
+class UserListView(LoginRequiredMixin, ListView):
+    model = UserProfile
+    template_name = "user_list.html"
+    context_object_name = "user_list"
+
+class FriendView(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        friend_profile = get_object_or_404(UserProfile, pk=pk)
+
+        request.user.userprofile.friends.add(friend_profile)
+        friend_profile.friends.add(request.user.userprofile)
+        return redirect ("user-list")
