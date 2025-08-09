@@ -1,3 +1,4 @@
+from django import forms
 from django.shortcuts import redirect, render
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views import View
@@ -5,7 +6,7 @@ from django.views.generic import ListView, CreateView, DetailView, DeleteView, U
 from .models import Post, UserProfile, Comment, Event, Group 
 from django.http import HttpResponseForbidden
 from django.urls import reverse, reverse_lazy
-from .forms import CommentForm, UserProfileForm
+from .forms import CommentForm, EventForm, UserProfileForm
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 # Create your views here.
@@ -17,10 +18,12 @@ class HomeView(ListView):
 
     def get_queryset(self):
         user = self.request.user
-        user_profile, created = UserProfile.objects.get_or_create(us=user)
+        if user.is_authenticated:
+            user_profile, created = UserProfile.objects.get_or_create(us=user)
 
-        friend_users = user_profile.friends.values_list('us', flat=True)
-        return Post.objects.filter(us__in=friend_users).order_by('-time')
+            friend_users = user_profile.friends.values_list('us', flat=True)
+            return Post.objects.filter(us__in=friend_users).order_by('-time')
+        return Post.objects.all().order_by("-time")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -99,6 +102,16 @@ class EventListView(LoginRequiredMixin, ListView):
     template_name = 'events.html'
     context_object_name = 'events'
     ordering = ['data']
+
+class EventCreateView(LoginRequiredMixin, CreateView):
+    model = Event
+    form_class = EventForm
+    template_name = 'events_create.html'
+    success_url = reverse_lazy('event-list')
+
+    def form_valid(self, form):
+        form.instance.us = self.request.user
+        return super().form_valid(form)
 
 class GroupListView(LoginRequiredMixin, ListView):
     model = Group
