@@ -2,41 +2,44 @@
 
 {% block content %}
 
-    <div class="main-container">
-        <div class="left-content">
-            {% for post in posts %}
-                <div class="post-card">
-                    <p><strong>Автор:</strong> 
-                        <a href="{% url 'profile' post.us.username %}">
-                            {{ post.us.username }}
-                        </a>
-                    </p>
-                    <p>{{ post.content }}</p>
-                </div>
-            {% empty %}
-                <p>Поки що немає постів.</p>
-            {% endfor %}
-        </div>
+<div class="main-container">
+    <div class="left-content">
+        {% for post in posts %}
+            <div class="post-card">
+                <p><strong>Автор:</strong> 
+                    <a href="{% url 'profile' post.us.username %}">
+                        {{ post.us.username }}
+                    </a>
+                </p>
 
-        <div class="right-sidebar">
-            <div class="sticky">
-                <div class="block">
-                    <h3>Останні події</h3>
-                    <ul>
-                        {% for event in events %}
-                            <li>{{ event.name }}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-                <div class="block">
-                    <h3>Останні групи</h3>
-                    <ul>
-                        {% for group in groups %}
-                            <li>{{ group.name }}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
+                <a href="{% url 'post_detail' post.pk %}">
+                    <p>{{ post.content|truncatewords:20 }}</p>
+                </a>
+            </div>
+        {% empty %}
+            <p>Поки що немає постів.</p>
+        {% endfor %}
+    </div>
+
+    <div class="right-sidebar">
+        <div class="sticky">
+            <div class="block">
+                <h3>Останні події</h3>
+                <ul>
+                    {% for event in events %}
+                        <li>{{ event.name }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="block">
+                <h3>Останні групи</h3>
+                <ul>
+                    {% for group in groups %}
+                        <li>{{ group.name }}</li>
+                    {% endfor %}
+                </ul>
             </div>
         </div>
     </div>
+</div>
 {% endblock %}

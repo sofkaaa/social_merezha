@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Видалити пост?</h2>
+<p>Ви впевнені, що хочете видалити пост "{{ object.title }}"?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-warning">Так, видалити</button>
+    <a href="{% url 'post_detail' object.id %}"><button type="submit" class="btn btn-warning">Скасувати</a></button>
+</form>
+{% endblock %}

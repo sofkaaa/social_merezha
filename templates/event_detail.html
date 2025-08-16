@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="event-detail-container">
+    <h1>{{ event.name }}</h1>
+    <p><strong>Дата:</strong> {{ event.data|date:"d.m.Y H:i" }}</p>
+    <p><strong>Опис:</strong> {{ event.bescription }}</p>
+
+    <h3>Учасники:</h3>
+    {% if event.member.all %}
+        <ul>
+            {% for user in event.member.all %}
+                <li>{{ user.username }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Ще ніхто не зареєстрований.</p>
+    {% endif %}
+
+    {% if user not in event.member.all %}
+        <form method="post" action="{% url 'event-register' event.pk %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success">Зареєструватись</button>
+        </form>
+    {% else %}
+        <p>Ви вже зареєстровані на цю подію</p>
+    {% endif %}
+
+    <a href="{% url 'event-list' %}" class="btn btn-dark">← Назад до подій</a>
+</div>
+{% endblock %}

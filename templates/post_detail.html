@@ -4,16 +4,15 @@
 <div class="post-detail">
   <h2>Деталі поста</h2>
 
-
   <div class="post-content">
     <p>{{ post.content }}</p>
 
     {% if post.image %}
-      <img src="{{ post.image.url }}" alt="Зображення поста" style="max-width: 100%; margin-top: 10px;">
+      <img src="{{ post.image.url }}" alt="Зображення поста" class="post-image">
     {% endif %}
 
     {% if post.video %}
-      <video controls style="max-width: 100%; margin-top: 10px;">
+      <video controls class="post-video">
         <source src="{{ post.video.url }}" type="video/mp4">
         Ваш браузер не підтримує відео.
       </video>
@@ -24,13 +23,19 @@
     {% endif %}
   </div>
 
+{% if user == post.us %}
+    {% csrf_token %}
+  <a href="{% url 'post-delete' post.id %}"><button type="submit" class="btn btn-warning">Видалити пост</a></button>
+  </form>
+{% endif %}
+
   <hr>
 
   <div class="comment-section">
     <h3>Коментарі</h3>
 
     {% for comment in post.comment_set.all %}
-      <div class="comment" style="margin-bottom: 15px; padding: 10px; background-color: #f3f3f3; border-radius: 8px;">
+      <div class="comment">
         <strong>{{ comment.us.username }}</strong><br>
         <small>{{ comment.time }}</small>
         <p>{{ comment.content }}</p>
@@ -48,5 +53,4 @@
     </form>
   </div>
 </div>
-
 {% endblock %}

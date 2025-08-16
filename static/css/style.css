@@ -187,3 +187,18 @@ form button:hover {
   margin-right: 10px;
   vertical-align: middle;
 }
+
+a {
+    color: black; 
+    text-decoration: none;
+}
+
+.event-link {
+    color: black;
+    text-decoration: none;
+}
+
+.event-link:hover {
+    color: rgb(71, 71, 71);
+    text-decoration: none;
+}

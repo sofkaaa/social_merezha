@@ -84,7 +84,7 @@ class ProfileView(LoginRequiredMixin, DetailView):
         
 class PostDeleteView(LoginRequiredMixin, DeleteView):
     model = Post
-    template_name = "post_confirm_delete.html"
+    template_name = "post_delete.html"
     success_url = reverse_lazy("home")
 
 class PostEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
@@ -112,6 +112,17 @@ class EventCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.us = self.request.user
         return super().form_valid(form)
+    
+class EventDetailView(LoginRequiredMixin, DetailView):
+    model = Event
+    template_name = 'event_detail.html'
+    context_object_name = 'event'
+
+class EventRegisterView(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        event = get_object_or_404(Event, pk=pk)
+        event.member.add(request.user)
+        return redirect('event-detail', pk=pk)
 
 class GroupListView(LoginRequiredMixin, ListView):
     model = Group
