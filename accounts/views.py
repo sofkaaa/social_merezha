@@ -35,7 +35,7 @@ class UserLoginView(View):
             user = form.get_user()
             login(request, user)
             return redirect('home')
-        return render(request, 'login.html', {'form': form})
+        return render(request, 'registration/login.html', {'form': form})
 
 @login_required
 def user_logout(request):
