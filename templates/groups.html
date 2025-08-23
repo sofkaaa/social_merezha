@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>Групи</h1>
+{% if user.is_authenticated %}
+    <a href="{% url 'group-create' %}" class="btn btn-dark">Створити групу</a>
+{% endif %}
+<div class="main-container">
+    <div class="left-content">
+        {% if groups %}
+            {% for group in groups %}
+                <div class="events-card">
+                    <h3>
+                        <a href="{% url 'group-detail' group.pk %}" class="event-link">
+                            {{ group.name }}
+                        </a>
+                    </h3>
+                    {% if group.ava %}
+                        <img src="{{ group.ava.url }}" alt="{{ group.name }}" style="max-width:150px; border-radius:8px; margin:5px 0;">
+                    {% endif %}
+                    <p>{{ group.bio|truncatewords:20 }}</p>
+                    <p><strong>Створено:</strong> {{ group.time|date:"d.m.Y" }}</p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>Поки що немає створених груп.</p>
+        {% endif %}
+    </div>
+
+    <div class="right-sidebar">
+        <div class="sticky">
+            <div class="block">
+                <h3>Нещодавно створені групи</h3>
+                <ul>
+                    {% for group in groups|dictsortreversed:"time"|slice:":5" %}
+                        <li>
+                            <a href="{% url 'group-detail' group.pk %}" class="event-link">
+                                {{ group.name }} — {{ group.time|date:"d.m.Y" }}
+                            </a>
+                        </li>
+                    {% empty %}
+                        <li>Немає груп</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

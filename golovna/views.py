@@ -6,7 +6,7 @@ from django.views.generic import ListView, CreateView, DetailView, DeleteView, U
 from .models import Post, UserProfile, Comment, Event, Group 
 from django.http import HttpResponseForbidden
 from django.urls import reverse, reverse_lazy
-from .forms import CommentForm, EventForm, UserProfileForm
+from .forms import CommentForm, EventForm, GroupForm, OwnerForm, UserProfileForm
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 # Create your views here.
@@ -128,6 +128,59 @@ class GroupListView(LoginRequiredMixin, ListView):
     model = Group
     template_name = 'groups.html'
     context_object_name = 'groups'
+
+class GroupCreateView(LoginRequiredMixin, CreateView):
+    model = Group
+    form_class = GroupForm
+    template_name = 'group_create.html'
+    success_url = reverse_lazy('group-list')
+
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        response = super().form_valid(form)
+        self.object.member.add(self.request.user)
+        return response
+    
+class GroupDetailView(LoginRequiredMixin, DetailView):
+    model = Group
+    template_name = 'group_detail.html'
+    context_object_name = 'group'
+
+class GroupRegisterView(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        group = get_object_or_404(Group, pk=pk)
+        
+        if request.user == group.owner:
+            if 'new_owner' in request.POST:
+                form = OwnerForm(group, request.POST)
+                if form.is_valid():
+                    group.owner = form.cleaned_data['new_owner']
+                    group.member.remove(request.user)
+                    group.save()
+                    return redirect('group-detail', pk=pk)
+            else:
+
+                form = OwnerForm(group)
+                return render(request, 'owner.html', {'form': form, 'group': group})
+        else:
+            if request.user in group.member.all():
+                group.member.remove(request.user)
+            else:
+                group.member.add(request.user)
+        
+        return redirect('group-detail', pk=pk)
+    
+class GroupDeleteView(LoginRequiredMixin, DeleteView):
+    model = Group
+    template_name = 'group_delete.html'
+    context_object_name = 'group'
+    success_url = reverse_lazy('group-list')
+
+    def dispatch(self, request, *args, **kwargs):
+        group = self.get_object()
+        if request.user != group.owner:
+            return redirect('group-detail', pk=group.pk)
+        return super().dispatch(request, *args, **kwargs)
 
 class ComentEditView(LoginRequiredMixin,  UpdateView):
     model = Comment

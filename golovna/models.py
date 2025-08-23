@@ -62,6 +62,8 @@ class Group(models.Model):
 
     member = models.ManyToManyField(User,blank=True)
 
+    owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='owned_groups')
+
     def __str__(self):
         return self.name 
     

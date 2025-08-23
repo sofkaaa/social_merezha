@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="group-detail-card">
+    <h1>{{ group.name }}</h1>
+
+    {% if group.ava %}
+        <img src="{{ group.ava.url }}" alt="{{ group.name }}" style="max-width:200px; border-radius:12px;">
+    {% endif %}
+
+    <p><strong>Дата створення:</strong> {{ group.time|date:"d.m.Y" }}</p>
+
+    <p><strong>Створив:</strong>
+        {% if group.member.all %}
+            {{ group.member.all.0.username }}
+        {% else %}
+            <em>Невідомо</em>
+        {% endif %}
+    </p>
+
+    {% if group.bio %}
+        <p><strong>Опис:</strong> {{ group.bio }}</p>
+    {% else %}
+        <p><em>Опис відсутній</em></p>
+    {% endif %}
+
+    <h3>Учасники ({{ group.member.count }})</h3>
+    {% if group.member.all %}
+        <ul>
+            {% for member in group.member.all %}
+                <li>{{ member.username }}</li>
+            {% empty %}
+                <p>Ще ніхто не зареєстрований.</p>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    {% if user.is_authenticated %}
+        <form method="post" action="{% url 'group-register' group.pk %}">
+            {% csrf_token %}
+            {% if user in group.member.all %}
+                <button type="submit" class="btn btn-danger">Вийти з групи</button>
+            {% else %}
+                <button type="submit" class="btn btn-success">Приєднатися до групи</button>
+            {% endif %}
+        </form>
+    {% endif %}
+
+    <br>
+    <a href="{% url 'group-list' %}" class="btn btn-dark">← Назад до груп</a>
+
+    {% if user == group.owner %}
+    <a href="{% url 'group-delete' group.pk %}" class="btn btn-danger mt-2">Видалити групу</a>
+    {% endif %}
+    
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>Передати права власника групи "{{ group.name }}"</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Передати та вийти</button>
+</form>
+
+<a href="{% url 'group-detail' group.pk %}" class="btn btn-secondary">Скасувати</a>
+
+{% endblock %}
